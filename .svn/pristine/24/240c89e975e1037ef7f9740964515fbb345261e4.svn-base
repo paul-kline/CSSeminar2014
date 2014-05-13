@@ -1,0 +1,22 @@
+package TetrisFactory.HelpfulStuff;
+
+import java.math.BigDecimal;
+import javax.annotation.Generated;
+import javax.persistence.metamodel.SingularAttribute;
+import javax.persistence.metamodel.StaticMetamodel;
+
+@Generated(value="EclipseLink-2.5.0.v20130507-rNA", date="2014-01-23T15:56:58")
+@StaticMetamodel(TetrisscoresPK.class)
+public class TetrisscoresPK_ { 
+
+    public static volatile SingularAttribute<TetrisscoresPK, BigDecimal> w8;
+    public static volatile SingularAttribute<TetrisscoresPK, BigDecimal> w7;
+    public static volatile SingularAttribute<TetrisscoresPK, BigDecimal> score;
+    public static volatile SingularAttribute<TetrisscoresPK, BigDecimal> w3;
+    public static volatile SingularAttribute<TetrisscoresPK, BigDecimal> w4;
+    public static volatile SingularAttribute<TetrisscoresPK, BigDecimal> w5;
+    public static volatile SingularAttribute<TetrisscoresPK, BigDecimal> w6;
+    public static volatile SingularAttribute<TetrisscoresPK, BigDecimal> w1;
+    public static volatile SingularAttribute<TetrisscoresPK, BigDecimal> w2;
+
+}

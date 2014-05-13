@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" total="1" passed="1">
+  <reporter-output>
+  </reporter-output>
+  <suite name="TetrisPaul2" duration-ms="176" started-at="2014-01-23T16:00:43Z" finished-at="2014-01-23T16:00:43Z">
+    <groups>
+    </groups>
+    <test name="TetrisFactory.HelpfulStuff.TetrisReaderTest" duration-ms="176" started-at="2014-01-23T16:00:43Z" finished-at="2014-01-23T16:00:43Z">
+      <class name="TetrisFactory.HelpfulStuff.TetrisReaderTest">
+        <test-method status="PASS" signature="testSplitScoreString()[pri:0, instance:testSplitScoreString(TetrisFactory.HelpfulStuff.TetrisReaderTest)]" name="testSplitScoreString" duration-ms="44" started-at="2014-01-23T16:00:43Z" finished-at="2014-01-23T16:00:43Z">
+        </test-method> <!-- testSplitScoreString -->
+      </class> <!-- TetrisFactory.HelpfulStuff.TetrisReaderTest -->
+    </test> <!-- TetrisFactory.HelpfulStuff.TetrisReaderTest -->
+  </suite> <!-- TetrisPaul2 -->
+</testng-results>

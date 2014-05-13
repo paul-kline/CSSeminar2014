@@ -1,0 +1,416 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package TetrisFactory;
+
+import TetrisHelpful.BoardConverter;
+import TetrisHelpful.TetrisReader;
+import TetrisHelpful.TetrisWriter;
+import java.awt.Color;
+import java.awt.Label;
+import java.awt.Point;
+import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import net.percederberg.tetris.Figure;
+import net.percederberg.tetris.Game;
+import net.percederberg.tetris.SquareBoard;
+import tetris3.APlacementRecord;
+import tetris3.PlacementDecider;
+
+/**
+ *
+ * @author Paul
+ */
+public class TrainFromFailSequenceTetris extends Game implements TrainerFailInterface {
+
+    LinkedList<byte[][]> boards;
+    LinkedList<Integer> pieces;
+    LinkedList<Integer> useThesePiecesFirst;
+    LinkedList<byte[][]> playedBoards;
+    LinkedList<Integer> playedPieces;
+    public Label label;
+    public LinkedList<APlacementRecord> evil;
+    public LinkedList<APlacementRecord> good;
+    byte[][] currentBoard;
+    public boolean useFailSet = true;
+    protected boolean camefromOops = false;
+
+    public TrainFromFailSequenceTetris() {
+        boards = new LinkedList<byte[][]>();
+        pieces = new LinkedList<Integer>();
+        playedBoards = new LinkedList<byte[][]>();
+        playedPieces = new LinkedList<Integer>();
+        evil = new LinkedList<APlacementRecord>();
+        good = new LinkedList<APlacementRecord>();
+        useThesePiecesFirst = new LinkedList<Integer>();
+    }
+    protected String name = "";
+
+    @Override
+    public void handleStart() {
+        name = JOptionPane.showInputDialog(null, "Who are you?");
+        boards.clear();
+        pieces.clear();
+        evil.clear();
+        good.clear();
+        // Reset components
+        board.setMessage(null);
+        board.clear();
+        previewBoard.clear();
+        handleLevelModification();
+        handleScoreModification();
+        component.button.setLabel("Pause");
+
+        LoadInEntireFailSequence();
+
+        SetBoardToThisBoard(boards.peek());
+        currentBoard = boards.peek();
+
+        // Reset score and figures
+        level = 1;
+        score = 0;
+        figure = null;
+
+        int thepiece = pieces.pop();
+        playedPieces.add(thepiece);
+        nextFigure = figures[thepiece - 1];
+
+
+
+
+
+        //nextFigure.rotateRandom();
+        nextRotation = nextFigure.getRotation();
+
+
+
+        // Start game thread
+        thread.reset();
+    }
+
+    @Override
+    public synchronized void handleTimer() {
+        if (figure == null) {
+            handleFigureStart();
+        } else if (figure.hasLanded()) {
+            handleFigureLanded();
+        } else {
+            //figure.moveDown();
+        }
+    }
+
+    @Override
+    public synchronized void handleKeyEvent(KeyEvent e) {
+
+        // Handle start, pause and resume
+        if (e.getKeyCode() == KeyEvent.VK_P) {
+            handleButtonPressed();
+            return;
+        }
+
+        // Don't proceed if stopped or paused
+        if (figure == null || moveLock || thread.isPaused()) {
+            return;
+        }
+
+        // Handle remaining key events
+        switch (e.getKeyCode()) {
+
+            case KeyEvent.VK_Y:
+                ActionWhenAgree();
+//                System.out.println("about to handle figure start!");
+                // handleFigureStart();
+//                System.out.println("You made it!");
+                break;
+            case KeyEvent.VK_LEFT:
+                figure.moveLeft();
+                break;
+
+            case KeyEvent.VK_RIGHT:
+                figure.moveRight();
+                break;
+
+            case KeyEvent.VK_DOWN:
+                handleDown();
+
+
+
+
+                break;
+            case KeyEvent.VK_SPACE:
+                figure.moveDown();
+                break;
+            case KeyEvent.VK_UP:
+
+                if (e.isControlDown()) {
+                    figure.rotateRandom();
+                } else if (e.isShiftDown()) {
+                    figure.rotateClockwise();
+                } else {
+                    figure.rotateCounterClockwise();
+                }
+                break;
+
+            case KeyEvent.VK_S:
+                if (level < 9) {
+                    level++;
+                    handleLevelModification();
+                }
+                break;
+
+            case KeyEvent.VK_N:
+                preview = !preview;
+                if (preview && figure != nextFigure) {
+                    nextFigure.attach(previewBoard, true);
+                    nextFigure.detach();
+                } else {
+                    previewBoard.clear();
+                }
+                break;
+            case KeyEvent.VK_P:
+                break;
+        }
+    }
+    int counter = 0;
+
+    @Override
+    public void handleFigureStart() {
+//Paul edit
+        figure = nextFigure;
+        int rotation = 0;
+        if (useFailSet) {
+            if (boards.peek() != null) {
+
+
+                if (!pieces.isEmpty()) {
+                    currentBoard = boards.pop();
+                    playedBoards.add(currentBoard);
+                    SetBoardToThisBoard(currentBoard);
+                    // Move next figure to current
+                    ++counter;
+                    System.out.println(counter);
+                    int thepiece = pieces.pop();
+                    playedPieces.add(thepiece);
+                    nextFigure = figures[thepiece - 1];
+                } else {
+                    nextFigure = figures[1];
+                    currentBoard = boards.pop();
+                    playedBoards.add(currentBoard);
+                    SetBoardToThisBoard(currentBoard);
+                    System.out.println("The next figure is made up!");
+                }
+
+                //end
+
+                moveLock = false;
+                rotation = nextRotation;
+
+
+
+
+                //     nextFigure.rotateRandom();
+                nextRotation = nextFigure.getRotation();
+
+
+                // Handle figure preview
+                if (preview) {
+                    previewBoard.clear();
+                    nextFigure.attach(previewBoard, true);
+                    nextFigure.detach();
+                }
+
+
+                // Attach figure to game board
+                figure.setRotation(rotation);
+                if (!figure.attach(board, false)) {
+                    //System.out.println("I'm the one who thinks the game should end");
+                    previewBoard.clear();
+                    figure.attach(previewBoard, true);
+                    figure.detach();
+                    handleGameOver();
+                }
+            } else {
+
+                PrintGoodAndEvil();
+                handleGameOver();
+            }
+        }
+
+//paul edit
+//        while (figure.canMoveTo(figure.GetxPos(), figure.GetyPos() + 1, figure.getRotation()) && !figure.isAllVisible()) {
+//            figure.moveDown();
+//        }
+//end
+
+    }
+
+    @Override
+    public void SetBoardToThisBoard(byte[][] byteBoard) {
+        for (int i = 0; i < byteBoard.length; i++) {
+            for (int j = 0; j < byteBoard[0].length; j++) {
+                int g = (int) byteBoard[i][j];
+                switch (g) {
+                    case 0:
+                        //continue;
+                        board.setSquareColor(j, i, null);
+                        break;
+                    case 1:
+                        board.setSquareColor(j, i, Color.yellow);
+                        break;
+                    case 2:
+                        board.setSquareColor(j, i, Color.RED);
+                        break;
+                    default:
+                        throw new AssertionError();
+                }
+
+
+            }
+
+        }
+    }
+
+    @Override
+    public void LoadInEntireFailSequence() {
+        System.out.println("i'm here");
+        //Create a file chooser
+        TetrisReader tetrisReader = new TetrisReader();
+        String path = TetrisFactory.path + "/FailSets";
+        System.out.println(path);
+        File file = tetrisReader.ChooseFileAtThisPath(path);
+        LoadInEntireFailSequenceHelper(file);
+    }
+
+    private void LoadInEntireFailSequenceHelper(File file) {
+        TetrisReader tetrisReader = new TetrisReader();
+        LinkedList<APlacementRecord> placements = tetrisReader.READinEntireFile(file);
+        for (APlacementRecord aPlacementRecord : placements) {
+            boards.add(aPlacementRecord.GetBoard());
+            pieces.add(aPlacementRecord.getPieceCode());
+        }
+
+
+    }
+
+    protected void PrintGoodAndEvil() {
+        PrintGoodAndEvil(("_GOOD_" + name + ".txt"), ("_EVIL_" + name + ".txt"));
+//        TetrisWriter tw = new TetrisWriter();
+//        String startExtention = TetrisFactory.path + TetrisFactory.Corrections + "/" + name +"/"+tw.GetTimeStamp(true, true, true, false, false, false);
+//        File file = new File(startExtention);
+//        boolean b=false;
+//        if (!file.exists()) {
+//            b=file.mkdirs();
+//        }
+//        System.out.println("T/F : I succeeded in making all directories. ANSWER: " + b);
+//        
+//        String timestamp = tw.GetTimeStamp(true,true,true,true,true,true);
+//        String goodFile = startExtention + timestamp + "_GOOD_" + name + ".txt";
+//        String evilFile = startExtention + timestamp + "_EVIL_" + name + ".txt";
+//
+//        tw.WritelHistoryToFile(evil, evilFile);
+//        tw.WritelHistoryToFile(good, goodFile);
+
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+    }
+
+    protected void PrintGoodAndEvil(String goodending, String evilending) {
+        TetrisWriter tw = new TetrisWriter();
+        String startExtention = TetrisFactory.path + TetrisFactory.Corrections + "/" + name + "/" + tw.GetTimeStamp(true, true, true, false, false, false);
+        File file = new File(startExtention);
+        boolean b = false;
+        if (!file.exists()) {
+            b = file.mkdirs();
+        }
+        System.out.println("T/F : I succeeded in making all directories. ANSWER: " + b);
+
+        String timestamp = tw.GetTimeStamp(true, true, true, true, true, true);
+        String goodFile = startExtention + "/" + timestamp + goodending;
+        String evilFile = startExtention + "/" + timestamp + evilending;
+
+        tw.WritelHistoryToFile(evil, evilFile);
+        tw.WritelHistoryToFile(good, goodFile);
+
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+    }
+
+    @Override
+    public void OopsButtonPressed() {
+        if (!evil.isEmpty() && !good.isEmpty()) {
+            evil.removeLast();
+            good.removeLast();
+            currentBoard = playedBoards.getLast();
+            System.out.println("I've popped the last board and piece!");
+        } else {
+            System.out.println("I didn't pop anything");
+        }
+
+        //       boards.addFirst(playedBoards.removeLast());
+//        currentBoard = playedBoards.removeLast();
+//        nextFigure = new Figure(playedPieces.removeLast());
+//        figure.detach();
+//        figure=null;
+//        SetBoardToThisBoard(currentBoard);
+//      // handleFigureStart();
+//        
+//       // board.PerhapsRedrawAll();
+
+    }
+
+    @Override
+    public void ActionWhenAgree() {
+        // figure.moveAllWayDown();
+
+        if (null != figure) {
+            figure.detach();
+            figure = null;
+            moveLock = true;
+        }
+
+        //    SetBoardToThisBoard(boards.peek());
+
+    }
+
+    @Override
+    public void handleDown() {
+        BoardConverter bc = new BoardConverter();
+
+        System.out.println("super handleDown being executed!!!");
+        TetrisWriter tetrisWriter = new TetrisWriter();
+        //              APlacementRecord placementrecord = new APlacementRecord(figure.shapeshape, placementdecider.getBoard());
+        System.out.println("evil board");
+        System.out.println(tetrisWriter.GetStringBoard(currentBoard));
+        APlacementRecord evilPlacement = new APlacementRecord(figure.shapeshape, currentBoard);
+
+        figure.moveAllWayDown();
+        //                PlacementDecider placementdecider2 = new PlacementDecider(board, figure, nextFigure);
+        System.out.println("good board");
+        //                placementdecider2.soutBoard();
+
+        byte[][] b = bc.ConvertToByte_specializeCurrentFigure(board, figure, 2);
+
+        APlacementRecord goodPlacement = new APlacementRecord(figure.shapeshape, b);
+        System.out.println(goodPlacement.GetStringBoard(b));
+        if (!bc.AreEquivelent(goodPlacement.GetBoard(), evilPlacement.GetBoard())) {
+            evil.add(evilPlacement);
+            good.add(goodPlacement);
+        } else {
+            System.out.println("HEY THOSE ARE THE SAME.");
+        }
+
+        moveLock = true;
+    }
+}

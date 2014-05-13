@@ -1,0 +1,82 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package net.percederberg.tetris;
+
+import TetrisFactory.WeightsWithNNTetris;
+
+/**
+ *
+ * @author paul.kline
+ */
+public class ControllerObject {
+    public int[] weights= new int[]{-3, -8, 43, 4, 14, 31,47, 45};
+    public boolean shouldStartTesting=false;
+    public boolean AutoDrop;
+    public int LevelSpeed;
+    public boolean PauseOnDiff;
+    Game myGame;
+    WeightSelector myConfiger;
+    public Boolean UseNN=true;
+    
+    
+    public ControllerObject(){
+     
+    }
+    public ControllerObject(Game tgame, WeightSelector ws){
+        myGame=tgame;
+        myConfiger=ws;
+    }
+    void SetAutoDrop(boolean b){
+        
+        AutoDrop=b;
+        if(null==myGame) return;
+        myGame.automatic=AutoDrop;
+    }
+    void setSpeedFast() {
+        if(null==myGame) return;
+        myGame.AllowedToChangeScore=false;
+        myGame.level=30;
+        myGame.handleLevelModification();
+    }
+
+    void setLevelAppropriate() {
+        if(null==myGame) return;
+        myGame.AllowedToChangeScore=true;
+        myGame.handleLevelModification();
+        
+    }
+
+    void setCustomSpeedLevel(int parseInt) {
+        if(null==myGame) return;
+        myGame.AllowedToChangeScore=false;
+        myGame.level=parseInt;
+        myGame.handleLevelModification();
+    }
+
+    void setWeightSelector(WeightSelector GetInstance) {
+        myConfiger=GetInstance;
+    }
+
+
+    void setGame(Game GetInstance) {
+        myGame= GetInstance;
+    }
+
+    void setUseNN(boolean selected) {
+        UseNN=selected;
+        if(null==myGame) return;
+        ((WeightsWithNNTetris)myGame).UseNN=UseNN;
+    }
+
+    void setPauseOnDiff(boolean selected) {
+        PauseOnDiff=selected;
+        if(null==myGame) return;
+        ((WeightsWithNNTetris)myGame).PauseOnDiff=PauseOnDiff;
+    }
+
+    void BeginIterations() {
+        shouldStartTesting=true;
+    }
+}

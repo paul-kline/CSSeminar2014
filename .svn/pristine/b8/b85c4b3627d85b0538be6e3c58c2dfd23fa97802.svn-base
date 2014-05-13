@@ -1,0 +1,14 @@
+package TetrisFactory.HelpfulStuff;
+
+import TetrisFactory.HelpfulStuff.TetrisscoresPK;
+import javax.annotation.Generated;
+import javax.persistence.metamodel.SingularAttribute;
+import javax.persistence.metamodel.StaticMetamodel;
+
+@Generated(value="EclipseLink-2.5.0.v20130507-rNA", date="2014-01-23T15:56:58")
+@StaticMetamodel(Tetrisscores.class)
+public class Tetrisscores_ { 
+
+    public static volatile SingularAttribute<Tetrisscores, TetrisscoresPK> tetrisscoresPK;
+
+}

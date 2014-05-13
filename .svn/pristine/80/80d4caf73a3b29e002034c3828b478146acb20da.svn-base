@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/1"/>
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="3">
+        <file>
+            <url>src/net/percederberg/tetris/Game.java</url>
+            <bookmark id="1">
+                <name/>
+                <line>310</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>src/net/percederberg/tetris/Main.java</url>
+            <bookmark id="2">
+                <name/>
+                <line>83</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>src/TetrisFactory/TrainFromFailSequenceTetris.java</url>
+            <bookmark id="3">
+                <name/>
+                <line>128</line>
+                <key/>
+            </bookmark>
+        </file>
+    </editor-bookmarks>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/Users/Paul/Documents/SVN%20TETRIS/TheTetris/Tetris_play_with_forSeminar/TetrisPaul2/src/net/percederberg/tetris/Game.java</file>
+            <file>file:/C:/Users/Paul/Documents/SVN%20TETRIS/TheTetris/Tetris_play_with_forSeminar/TetrisPaul2/src/net/percederberg/tetris/Main.java</file>
+            <file>file:/C:/Users/Paul/Documents/SVN%20TETRIS/TheTetris/Tetris_play_with_forSeminar/TetrisPaul2/src/TetrisFactory/TetrisFactory.java</file>
+        </group>
+    </open-files>
+</project-private>

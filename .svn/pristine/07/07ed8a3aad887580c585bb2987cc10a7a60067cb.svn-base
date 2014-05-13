@@ -1,0 +1,45 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package bytefigtestering;
+
+import NeuralThings.PaulNetworkFactory;
+import NeuralThings.PaulNetworkFactory.NNCodes;
+import TetrisHelpful.TetrisReader;
+import TetrisHelpful.TetrisWriter;
+
+/**
+ *
+ * @author paul.kline
+ */
+public class Seed {
+
+    NNCodes nncode;
+    String WeightString;
+    int[] weights;
+
+    public Seed(NNCodes nncodep, String strW) {
+        nncode = nncodep;
+        WeightString = strW;
+        setWeights(strW);
+
+    }
+
+    private void setWeights(String str) {
+       
+        
+        TetrisReader tr = new TetrisReader();
+        int[] ScoreAndweights = tr.SplitScoreStringToIntArray(str, ",");
+        
+         weights = new int[ScoreAndweights.length-1];
+        for (int i = 1; i < ScoreAndweights.length; i++) {
+            weights[i - 1] = ScoreAndweights[i];
+        }
+    }
+    
+    @Override
+    public String toString(){
+        return nncode.toString() +"~~"+  WeightString;
+    }
+}

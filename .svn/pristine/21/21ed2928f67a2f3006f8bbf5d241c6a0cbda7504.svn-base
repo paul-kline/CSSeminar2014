@@ -1,0 +1,33 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package bytefigtestering;
+
+import TetrisHelpful.BoardConverter;
+import java.util.LinkedList;
+import tetris3.APlacementRecord;
+import tetris3.ByteFig;
+import tetris3.Cenario;
+import tetris3.PlacementDecider;
+
+/**
+ *
+ * @author Paul
+ */
+public abstract class PaulGame {
+
+    protected byte[][] board;
+    protected ByteFig fig1;// = Game.randomFigure();
+    protected ByteFig fig2;//= new Figure();
+    protected Cenario firstcenario;//= new Cenario();
+    protected int score;
+    protected double AveHeight = 0;
+    protected PlacementDecider placementDecider;
+    protected LinkedList<APlacementRecord> placementHistory;
+    protected boolean keepHistory;
+    BoardConverter bc = new BoardConverter();
+    //int w1,w2,w3,w4,w5,w6,w7, w8=0;
+    protected int[] myWeights;
+}

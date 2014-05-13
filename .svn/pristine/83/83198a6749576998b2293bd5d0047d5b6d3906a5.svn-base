@@ -1,0 +1,82 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package bytefigtestering;
+
+import java.util.LinkedList;
+import tetrispaul4.ControllerObject;
+
+/**
+ *
+ * @author paul.kline
+ */
+public class GAControllerObject extends ControllerObject{
+        private boolean[] ShouldMutateWeightsArray;
+        private LinkedList<Seed> seeds;
+        private int generations;
+        private int seedsPerGen;
+        private int chooseTopXfromEachSeed;
+        private boolean careIfTopIsnotFrequent;
+        private boolean careIfHoleIsMadeByPlacement;
+
+    public boolean[] getShouldMutateWeightsArray() {
+        return ShouldMutateWeightsArray;
+    }
+
+    public void setShouldMutateWeightsArray(boolean[] ShouldMutateWeightsArray) {
+        this.ShouldMutateWeightsArray = ShouldMutateWeightsArray;
+    }
+
+    public LinkedList<Seed> getSeeds() {
+        return seeds;
+    }
+
+    public void setSeeds(LinkedList<Seed> seeds) {
+        this.seeds = seeds;
+    }
+
+    public int getGenerations() {
+        return generations;
+    }
+
+    public void setGenerations(int generations) {
+        this.generations = generations;
+    }
+
+    public int getSeedsPerGen() {
+        return seedsPerGen;
+    }
+
+    public void setSeedsPerGen(int seedsPerGen) {
+        this.seedsPerGen = seedsPerGen;
+    }
+
+    public int getChooseTopXfromEachSeed() {
+        return chooseTopXfromEachSeed;
+    }
+
+    public void setChooseTopXfromEachSeed(int chooseTopXfromEachSeed) {
+        this.chooseTopXfromEachSeed = chooseTopXfromEachSeed;
+    }
+
+    public boolean isCareIfTopIsnotFrequent() {
+        return careIfTopIsnotFrequent;
+    }
+
+    public void setCareIfTopIsnotFrequent(boolean careIfTopIsnotFrequent) {
+        this.careIfTopIsnotFrequent = careIfTopIsnotFrequent;
+    }
+
+    public boolean isCareIfHoleIsMadeByPlacement() {
+        return careIfHoleIsMadeByPlacement;
+    }
+
+    public void setCareIfHoleIsMadeByPlacement(boolean careIfHoleIsMadeByPlacement) {
+        this.careIfHoleIsMadeByPlacement = careIfHoleIsMadeByPlacement;
+    }
+        
+        
+        
+    
+}

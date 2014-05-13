@@ -1,0 +1,179 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package bytefigtestering;
+
+import TetrisFactory.HelpfulStuff.TetrisWriter;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.util.Calendar;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.percederberg.tetris.Figure;
+import net.percederberg.tetris.Game;
+import tetrispaul2.ByteFig;
+import tetrispaul2.Cenario;
+import tetrispaul2.PlacementDecider;
+import tetrispaul2.APlacementRecord;
+
+/**
+ *
+ * @author Paul
+ */
+public class PaulGame {
+
+    byte[][] board;
+    ByteFig fig1;// = Game.randomFigure();
+    ByteFig fig2;//= new Figure();
+    Cenario firstcenario;//= new Cenario();
+    int score;
+    PlacementDecider placementDecider;
+    private LinkedList<APlacementRecord> placementHistory;
+    private boolean keepHistory;
+    //int w1,w2,w3,w4,w5,w6,w7, w8=0;
+    int[] weights;
+
+    public PaulGame(int[] weightsp) {//int w1p, int w2p, int w3p, int w4p, int w5p, int w6p, int w7p, int w8p){
+
+        weights = new int[weightsp.length];
+        for (int i = 0; i < weightsp.length; i++) {
+            weights[i] = weightsp[i];
+        }
+//        weights[0] =weightsp[0];
+//        weights[1]=weightsp[1];
+//        weights[2]=weightsp[2];
+//        weights[3]=weightsp[3];
+//        weights[4]=weightsp[4];
+//        weights[5]=weightsp[5];
+//        weights[6]=weightsp[6];
+//        weights[7]=weightsp[7];
+
+
+
+        initialize();
+        //firstcenario= new Cenario(board,fig1,)
+
+        //    maintest.soutBoard();
+        //   System.out.println("SCORE: " + score);
+
+    }
+
+    public void PlayGame() {
+        makeFirstMove();
+        playRestOfGame();
+    }
+
+    private void initialize() {
+        score = 0;
+        board = new byte[20][10];
+        int rand = (int) (Math.random() * 7 + 1);
+        fig1 = new ByteFig(rand);
+        rand = (int) (Math.random() * 7 + 1);
+        fig2 = new ByteFig(rand);
+        placementDecider = new PlacementDecider(board, fig1, fig2, weights); //w1,w2,w3,w4,w5,w6,w7, w8);
+
+
+
+    }
+
+    private void makeFirstMove() {
+
+        board = placementDecider.getBest().getMyboard();
+        //maintest.getBest().soutBoard();
+    }
+
+    private void playRestOfGame() {
+        
+            while (thirdDownIsZeros()) {
+                makeAMove();
+                score++;
+            
+        }
+
+
+
+
+
+    }
+
+    private void makeAMove() {
+        fig1 = null;
+        fig1 = fig2;
+        fig2 = null;
+        int rand = (int) (Math.random() * 7 + 1);
+        fig2 = new ByteFig(rand);
+
+        placementDecider = null;
+        placementDecider = new PlacementDecider(board, fig1, fig2, weights);//w1,w2,w3,w4,w5,w6,w7, w8);
+        board = placementDecider.getBest().getMyboard();
+        if (keepHistory) {
+            Cenario cenario= placementDecider.getBest();
+            APlacementRecord rememberMe= new APlacementRecord(cenario.getMyfig().getType(),
+                    cenario.DuplicateBoard(cenario.getMyboardAfterPlacementBeforeLinesClearedBeforeAllOnes()));
+            AddBoardToHistory(rememberMe);
+        }
+        //maintest.getBest().soutBoard();
+    }
+
+    private boolean thirdDownIsZeros() {
+        for (int i = 0; i < board[0].length; i++) {
+            if (board[2][i] != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+     public void soutMe() {
+        System.out.println("Score: " + score + " ** " + weights[0] + ", " + weights[1] + ", " + weights[2]
+                + ", " + weights[3] + ", " + weights[4] + ", " + weights[5] + ", " + weights[6] + ", " + weights[7]);
+
+    }
+
+    public boolean isKeepHistory() {
+        return keepHistory;
+    }
+
+    public void setKeepHistory(boolean keepHistory) {
+        this.keepHistory = keepHistory;
+        if (null== placementHistory) {
+            placementHistory= new LinkedList<APlacementRecord>();
+        }
+    }
+
+    private void AddBoardToHistory(APlacementRecord record) {
+        if (score>100) {           
+             placementHistory.removeFirst();
+        }
+            placementHistory.add(record);
+        
+    }
+    public void PrintHistory(){
+        Calendar cal=Calendar.getInstance();
+        String filePrefix=  "..\\..\\failsets\\FailSequence_";
+        String timestamp= (cal.get(Calendar.MONTH)+1) +"_" + cal.get(Calendar.DAY_OF_MONTH) + "_" + 
+                cal.get(Calendar.YEAR) + 
+                "___" + cal.get(Calendar.HOUR_OF_DAY) +
+                "_" + cal.get(Calendar.MINUTE) + "___" + cal.get(Calendar.SECOND);
+        
+        //String fileName= filePrefix + timestamp + ".txt";
+        String fileName=".\\resources\\ImaFailure_"+ timestamp + ".txt";
+        
+
+        TetrisWriter tetrisWriter = new TetrisWriter();
+        tetrisWriter.WritelHistoryToFile(placementHistory, fileName);
+       
+        
+        
+       //URL testURL= this.getClass().
+        
+        
+        
+        
+    }
+}

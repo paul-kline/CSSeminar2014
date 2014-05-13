@@ -1,0 +1,93 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package TemplateMethod;
+
+import net.percederberg.tetris.Game;
+import tetris3.PlacementDecider;
+
+/**
+ *
+ * @author paul.kline
+ */
+public class AbstractGame extends Game implements PlayingInterface {
+
+    boolean UseNN = false;
+    boolean PauseOnDiff = false;
+    private boolean careIfNNChoiceIsSameAsGChoice=false;
+    private boolean careIfHoleIsMade=false;
+
+    public AbstractGame() {
+        super();
+    }
+
+    
+   
+
+    @Override
+    public void handleFigureStart() {
+        super.handleFigureStart();
+
+        if (!ShouldUseRegularTetris()) {
+            handleMakeDecision();
+            movePiece(placementDecider);
+        }
+    }
+
+    public boolean shouldKeepHistory() {
+        return true;
+    }
+
+    public boolean ShouldUseRegularTetris() {
+        return true;
+    }
+
+    private boolean ShouldAskNN() {
+        return UseNN;
+    }
+
+    public boolean ShouldPauseOnDiff() {
+        return PauseOnDiff;
+    }
+
+    @Override
+    public void handleMakeDecision() {
+        placementDecider = null;
+        placementDecider = new PlacementDecider(board, figure, nextFigure, CO.weights);
+
+        if (ShouldAskNN()) {
+            placementDecider.SetmyCO(CO);
+            placementDecider.MakeADecisionAndAskNNIfNotSure();
+            if (TestPauseConditions()) {
+
+                if (ShouldPauseOnDiff()) {
+                    thread.setPaused(true);
+                    handlePause();
+                }
+
+            }
+        } else {
+            placementDecider.MakeDecision();
+        }
+
+    }
+
+    public boolean TestPauseConditions() {
+        if (getCareIfNNChoiceIsSameAsGChoice() && !placementDecider.GetIsNNChoiceSameAsG_Choice()) {
+            return true;
+        }
+        if (getCareIfHoleIsMade() && placementDecider.HoleIsMade()) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean getCareIfNNChoiceIsSameAsGChoice() {
+        return careIfNNChoiceIsSameAsGChoice; 
+    }
+
+    public boolean getCareIfHoleIsMade() {
+        return careIfHoleIsMade;
+    }
+}

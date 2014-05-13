@@ -1,0 +1,198 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package bytefigtestering;
+
+import TetrisHelpful.TetrisWriter;
+import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import net.percederberg.tetris.ControllerObject;
+import net.percederberg.tetris.Figure;
+import net.percederberg.tetris.Game;
+import net.percederberg.tetris.Main;
+import net.percederberg.tetris.WeightSelector;
+
+/**
+ *
+ * @author Paul
+ */
+public class ByteFigTestering {
+
+    /**
+     * If true, this boolean will use the smarter decision maker to ask the NN
+     * instead of the "classic" MakeDecision()"
+     */
+    public static boolean useNN = true;
+
+    public static boolean isUseNN() {
+        return useNN;
+    }
+
+    public static void setUseNN(boolean useNN) {
+        ByteFigTestering.useNN = useNN;
+    }
+
+    public Progress getMyProg() {
+        return myProg;
+    }
+
+    public void setMyProg(Progress myProg) {
+        this.myProg = myProg;
+    }
+
+    public static ByteFigTestering getMyself() {
+        return myself;
+    }
+
+    public static void setMyself(ByteFigTestering myself) {
+        ByteFigTestering.myself = myself;
+    }
+
+    public static int getNumberOfGamesToPlay() {
+        return numberOfGamesToPlay;
+    }
+
+    public static void setNumberOfGamesToPlay(int numberOfGamesToPlay) {
+        ByteFigTestering.numberOfGamesToPlay = numberOfGamesToPlay;
+    }
+
+    public static int getGamesCompleteSoFar() {
+        return gamesCompleteSoFar;
+    }
+
+    public static void setGamesCompleteSoFar(int gamesCompleteSoFar) {
+        ByteFigTestering.gamesCompleteSoFar = gamesCompleteSoFar;
+    }
+
+    public static void Begin(String input, ControllerObject co) throws NumberFormatException {
+        int THISMANYGAMES = 0;
+
+        boolean SHOULDCLONE = input.contains("c");
+        boolean USETESTWEIGHTS = input.contains("t");
+        char[] in = input.toCharArray();
+        for (int i = 0; i < in.length; i++) {
+            if (Character.isDigit(in[i])) {
+                THISMANYGAMES = Integer.parseInt(input.substring(i));
+                numberOfGamesToPlay = THISMANYGAMES;
+                break;
+            }
+        }
+        System.out.println("shouldclone: " + SHOULDCLONE + " usetestweights: " + USETESTWEIGHTS);
+        System.out.println(THISMANYGAMES);
+        int[] someweights = (USETESTWEIGHTS) ? new int[]{0, 0, 0, 0, 0, 0, 0, 0} : new int[]{-3, -8, 43, 4, 14, 31, 47, 45}; //{-320, -778, 4403, 324, 1316,3170,4743,4495}; {-2,-11,-48,0,14,32,50,45};//
+        someweights= (USETESTWEIGHTS)? someweights : co.weights;
+        
+        PaulGame pg = new PaulGame(someweights);
+        TetrisWriter tw = new TetrisWriter();
+        String Writehere = "Z:\\TetrisGames\\"; //"C:\\Users\\Paul\\Desktop\\Results Here please\\";
+        String StartingLoc = Writehere;
+        Writehere += (USETESTWEIGHTS) ? "TEST" : "";
+        Writehere += (SHOULDCLONE) ? "UNITEDCloneScores" : "UNITEDExperiemtnalScores";
+        String stamp = tw.GetTimeStamp(true, true, true, true, true, true);
+        Writehere += stamp;
+        Writehere += ".txt";
+        //tw.GetTimeStamp(true, true, true, true, true, true)
+        myself = new ByteFigTestering();
+
+        myself.myProg = new Progress();
+        myself.myProg.setVisible(true);
+        myself.myProg.setTitle("ByteFigTestering: " + input);
+        myself.myProg.displayWeights(someweights);
+        myself.myProg.displayUsingNN(useNN);
+        boolean success = (SHOULDCLONE) ? PlayThisGameALotOfTimes(THISMANYGAMES, pg, Writehere)
+                : PlayThisManySlightMutationsToOneGame(THISMANYGAMES, pg, Writehere);
+
+
+        if (success) {
+            tw.AppendToFile("I finished." + tw.GetTimeStamp(true, true, true, true, true, true), StartingLoc + "WorkersOutput" + ".txt");
+        }
+        //  PlayThisGameALotOfTimes(THISMANY, pg, output);
+        System.out.println(success);
+        try {
+            Thread.sleep(5000);
+            System.exit(1);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Progress.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private static void SetControllerObjectIdeas(ControllerObject co) {
+        if (null!=co.getUseNN()) {
+            useNN=co.getUseNN();
+            System.out.println("Okay, show I use nn?" + useNN);
+        }
+        
+    }
+    Progress myProg;
+    static ByteFigTestering myself;
+    static int numberOfGamesToPlay = 0;
+    static int gamesCompleteSoFar = 0;
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+
+
+
+        //Score: 9083268:   {-2,-11,-48,0,14,32,50,45};
+        //
+        //WA to try sometime {-3.20, -7.78, 44.03, 3.24, 13.16,31.70,47.43,44.95}
+        String input = JOptionPane.showInputDialog(null, "'t': test | 'r': real\n"
+                + "'m': mutate | 'c': clone", "tm").toLowerCase();
+        System.out.println(input);
+        ControllerObject co = new ControllerObject();
+        WeightSelector.Constructor(co);
+       // WeightSelector.GetInstance().setTitle("ByteFigTestering");
+        
+//        WeightSelector.GetInstance().repaint();
+        try {
+            while (!co.isShouldStartTesting()) {
+                Thread.sleep(3);
+            }
+
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        WeightSelector.GetInstance().setVisible(false);
+        SetControllerObjectIdeas(co);
+        Begin(input, co);
+    }
+
+    public static boolean PlayThisManySlightMutationsToOneGame(int thismany, PaulGame pg, String outputfile) {
+        AIPlayer controller = new AIPlayer(pg, thismany);
+        System.out.println("pg weights are:" + pg.GetStringWeights());
+        controller.createNextGenBasedOn(pg);
+        controller.GivePopulationLife(outputfile);
+        return true;
+    }
+
+    private static boolean PlayThisGameALotOfTimes(int thismany, PaulGame pg, String outputfile) {
+        AIPlayer controller = new AIPlayer(pg, thismany);
+        controller.createNextGenOfClones(pg);
+        controller.GivePopulationLife(outputfile);
+        return true;
+    }
+
+    public static ByteFigTestering GetInstance() {
+        return myself;
+
+
+    }
+
+    void NotifyGameCompleted() {
+        gamesCompleteSoFar++;
+//        System.out.println(gamesCompleteSoFar);
+//        System.out.println(numberOfGamesToPlay);
+        int newVal = (int) (((double) gamesCompleteSoFar / (double) numberOfGamesToPlay) * 100.0);
+//        System.out.println("SetNewVal!!" + newVal);
+        myProg.setProgressTo(newVal);
+        if (gamesCompleteSoFar == numberOfGamesToPlay) {
+            myProg.setCompleted();
+        }
+        myProg.repaint();
+    }
+}

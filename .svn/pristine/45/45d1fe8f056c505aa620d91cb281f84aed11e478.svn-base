@@ -1,0 +1,137 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package TetrisFactory.HelpfulStuff;
+
+import TetrisFactory.TrainFromFailSequenceTetris;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import tetrispaul2.APlacementRecord;
+
+/**
+ *
+ * @author paul.kline
+ */
+public class TetrisReader {
+
+    public static final String PIECE = "Piece:";
+    public static final String BOARD = "Board:";
+    private Object pieces;
+
+    public File ChooseDirectoryAtThisPath(String path) {
+        final JFileChooser chooser = new JFileChooser();
+        chooser.setCurrentDirectory(new java.io.File("."));
+        chooser.setDialogTitle("Choose Directory");
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        chooser.setAcceptAllFileFilterUsed(false);
+        if (chooser.showOpenDialog(chooser) == JFileChooser.APPROVE_OPTION) {            
+                    return chooser.getSelectedFile();            
+        }else{
+            return null;
+        }
+      
+    }
+
+    public File ChooseFileAtThisPath(String path) {
+        final JFileChooser fc = new JFileChooser();
+        File file = new File(path);
+        fc.setCurrentDirectory(file);
+        int returnVal = fc.showOpenDialog(fc);//component);
+        file = fc.getSelectedFile();
+        return file;
+
+
+    }
+
+    public LinkedList<APlacementRecord> READinEntireFile(File file) {
+        final int BOARDSIZEROWS = 20;
+        final int BOARDSIZECOLUMNS = 10;
+
+
+        LinkedList<APlacementRecord> resultPlacements = new LinkedList<>();
+        // LinkedList<byte[][]> boards = new LinkedList<>();
+        //  LinkedList<Integer> pieces = new LinkedList<>();
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(file));
+            // StringBuilder sb = new StringBuilder();
+            boolean boardReadIn = false;
+            byte[][] board = null;
+            Integer piece = null;
+            String line = br.readLine();
+
+            while (line != null) {
+                if (line.compareTo("") == 0) {
+                    line = br.readLine();
+                    continue;
+                }
+                if (line.contains(PIECE)) {
+                    line = br.readLine();
+                    piece = Integer.parseInt(line);
+                    //pieces.add(piece);
+
+                } else if (line.contains(BOARD)) {
+                    line = br.readLine();
+                    board = new byte[BOARDSIZEROWS][BOARDSIZECOLUMNS];
+                    // while (line.compareTo("")!=0 || line.compareTo("\n")!=0) {
+
+
+                    for (int i = 0; i < board.length; i++) {
+
+                        int index = 0;
+                        char[] chararr = line.toCharArray();
+                        for (int j = 0; j < board[0].length; j++) {
+                            //  System.out.println("length: " + chararr.length);            
+                            while (chararr[index] == ' ' && index < chararr.length) {
+                                index++;
+                            }
+
+                            board[i][j] = Byte.parseByte("" + chararr[index]);
+                            index++;
+                        }
+                        line = br.readLine();
+                    }
+                    //}
+                    boardReadIn = true;
+                    // boards.add(board);
+                    //APlacementRecord x = new APlacementRecord();
+//                    System.out.println("test:");
+//                    System.out.println(x.GetStringBoard(board));
+
+                    //board = null;
+
+                }
+//                sb.append(line);
+//                sb.append('\n');
+                line = br.readLine();
+                if (boardReadIn) {
+                    APlacementRecord x = new APlacementRecord(piece, board);
+                    resultPlacements.add(x);
+                    piece = null;
+                    board = null;
+                    boardReadIn = false;
+                }
+            }
+//            String everything = sb.toString();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(TrainFromFailSequenceTetris.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(TrainFromFailSequenceTetris.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                br.close();
+            } catch (IOException ex) {
+                Logger.getLogger(TrainFromFailSequenceTetris.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return resultPlacements;
+    }
+}

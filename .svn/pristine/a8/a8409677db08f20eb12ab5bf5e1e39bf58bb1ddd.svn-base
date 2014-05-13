@@ -1,0 +1,53 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ *//*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package NeuralThings;
+
+import static NeuralThings.PaulNetworkFactory.NNCodes.NN3Valuesc;
+import org.encog.neural.networks.BasicNetwork;
+
+/**
+ *
+ * @author Paul
+ */
+public class PaulNetworkFactory {
+
+    
+    public static enum NNCodes{ NN2c, NN3Valuesc, NNHandClickedValuesc, NNSucky100Inputsc,
+    NNValues2c, NNValues28Iterationsc, NONE};
+    
+    public BasicNetwork AssembleNetwork(NNCodes networkCode){
+        PaulNetwork pn;
+        switch (networkCode) {
+            case NN2c:
+                pn = new NN2();
+                break;
+            case NN3Valuesc:
+                pn = new NN3Values();
+                break;
+            case NNHandClickedValuesc:
+                pn = new NNHandClickedValues();
+                break;
+            case NNSucky100Inputsc:
+                pn = new NNSucky100Inputs();
+                break;
+            case NNValues2c:
+                pn = new NNValues2();
+                break;
+            case NNValues28Iterationsc:
+                pn = new NNValues28Iterations();
+                break;
+            default:
+                throw new AssertionError();
+        }
+        return (BasicNetwork)pn.createNetwork();
+  
+}
+}

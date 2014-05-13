@@ -1,0 +1,158 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package net.percederberg.tetris;
+
+import NeuralThings.PaulNetworkFactory;
+import NeuralThings.PaulNetworkFactory.NNCodes;
+import TetrisFactory.WeightsWithNNTetris;
+
+/**
+ *
+ * @author paul.kline
+ */
+public class ControllerObject {
+  
+    private NNCodes myNNCode=NNCodes.NN3Valuesc;
+    public NNCodes getNNCode(){ return myNNCode;}
+    public int[] weights= new int[]{-3, -8, 43, 4, 14, 31,47, 45};
+    private boolean shouldStartTesting=false;
+    private boolean UseWeights=true;
+    public boolean isUseWeights(){return UseWeights;}
+    public int[] getWeights() {
+        return weights;
+    }
+
+    public void setWeights(int[] weights) {
+        this.weights = weights;
+    }
+
+    public boolean isShouldStartTesting() {
+        return shouldStartTesting;
+    }
+
+    public void setShouldStartTesting(boolean shouldStartTesting) {
+        this.shouldStartTesting = shouldStartTesting;
+    }
+
+    public boolean isAutoDrop() {
+        return AutoDrop;
+    }
+
+    public void setAutoDrop(boolean AutoDrop) {
+        this.AutoDrop = AutoDrop;
+    }
+
+    public int getLevelSpeed() {
+        return LevelSpeed;
+    }
+
+    public void setLevelSpeed(int LevelSpeed) {
+        this.LevelSpeed = LevelSpeed;
+    }
+
+    public Game getMyGame() {
+        return myGame;
+    }
+
+    public void setMyGame(Game myGame) {
+        this.myGame = myGame;
+    }
+
+    public WeightSelector getMyConfiger() {
+        return myConfiger;
+    }
+
+    public void setMyConfiger(WeightSelector myConfiger) {
+        this.myConfiger = myConfiger;
+    }
+
+    public Boolean getUseNN() {
+        return UseNN;
+    }
+
+    public void setUseNN(Boolean UseNN) {
+        this.UseNN = UseNN;
+    }
+
+  
+
+    public void setUseWeights(boolean b) {
+        UseWeights = b;
+        myGame.setUseWeights(UseWeights);
+    }
+    private boolean AutoDrop;
+    private int LevelSpeed;
+    private boolean PauseOnDiff;
+    Game myGame;
+    WeightSelector myConfiger;
+    private Boolean UseNN=true;
+   
+    
+    public ControllerObject(){
+     
+    }
+    public ControllerObject(Game tgame, WeightSelector ws){
+        myGame=tgame;
+        myConfiger=ws;
+    }
+    void SetAutoDrop(boolean b){
+        
+        AutoDrop=b;
+        if(null==myGame) return;
+        myGame.automatic=AutoDrop;
+    }
+    void setSpeedFast() {
+        LevelSpeed=30;
+        if(null==myGame) return;
+        myGame.AllowedToChangeScore=false;
+        myGame.level=LevelSpeed;
+        myGame.handleLevelModification();
+    }
+
+    void setLevelAppropriate() {
+        if(null==myGame) return;
+        myGame.AllowedToChangeScore=true;
+        myGame.handleLevelModification();
+        
+    }
+
+    void setCustomSpeedLevel(int parseInt) {
+        LevelSpeed= parseInt;
+        if(null==myGame) return;
+        myGame.AllowedToChangeScore=false;
+        myGame.level=LevelSpeed;
+        myGame.handleLevelModification();
+    }
+
+    void setWeightSelector(WeightSelector GetInstance) {
+        myConfiger=GetInstance;
+    }
+
+
+    void setGame(Game GetInstance) {
+        myGame= GetInstance;
+    }
+
+    void setUseNN(boolean selected) {
+        UseNN=selected;
+        if(null==myGame) return;
+        ((WeightsWithNNTetris)myGame).UseNN=UseNN;
+    }
+
+    void setPauseOnDiff(boolean selected) {
+        PauseOnDiff=selected;
+        if(null==myGame) return;
+        ((WeightsWithNNTetris)myGame).PauseOnDiff=PauseOnDiff;
+    }
+
+    void BeginIterations() {
+        shouldStartTesting=true;
+    }
+    void setNN(NNCodes n){
+        myNNCode=n;
+        myGame.setUseThisNN(myNNCode);
+    }
+   
+}

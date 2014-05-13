@@ -1,0 +1,5 @@
+Score:	16
+Weights:	, -3, -8, 43, 4, 14, 31, 47, 45
+NeuralN:	NN3Valuesc
+careFrequency, careHoleMade, firstPos:	true, false, true
+Back Out %:	2.0

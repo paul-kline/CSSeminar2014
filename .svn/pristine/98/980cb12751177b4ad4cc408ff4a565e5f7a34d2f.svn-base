@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Failed suite [TetrisPaul2]">
+  <test name="TetrisFactory.HelpfulStuff.TetrisReaderTest(failed)" junit="true" preserve-order="true">
+    <classes>
+      <class name="TetrisFactory.HelpfulStuff.TetrisReaderTest">
+        <methods>
+          <include name="testSplitScoreString"/>
+        </methods>
+      </class> <!-- TetrisFactory.HelpfulStuff.TetrisReaderTest -->
+    </classes>
+  </test> <!-- TetrisFactory.HelpfulStuff.TetrisReaderTest(failed) -->
+</suite> <!-- Failed suite [TetrisPaul2] -->

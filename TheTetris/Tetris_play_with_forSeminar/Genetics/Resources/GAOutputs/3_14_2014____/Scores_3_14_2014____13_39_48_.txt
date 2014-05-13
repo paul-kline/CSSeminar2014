@@ -1,0 +1,10 @@
+Score: 7 ** 0, 0, 0, 0, 0, 0, 0, 0 Average Height: 11.0 NN:NN3Valuesc Asking Conditions:false false
+Score: 7 ** 0, 0, 0, 0, 0, 0, 0, 0 Average Height: 11.428571428571429 NN:NN3Valuesc Asking Conditions:false false
+Score: 7 ** 0, 0, 0, 0, 0, 0, 0, 0 Average Height: 11.285714285714285 NN:NN3Valuesc Asking Conditions:false false
+Score: 7 ** 0, 0, 0, 0, 0, 0, 0, 0 Average Height: 11.142857142857142 NN:NN3Valuesc Asking Conditions:false false
+Score: 7 ** 0, 0, 0, 0, 0, 0, 0, 0 Average Height: 11.57142857142857 NN:NN3Valuesc Asking Conditions:false false
+Score: 7 ** 0, 0, 0, 0, 0, 0, 0, 0 Average Height: 11.142857142857142 NN:NN3Valuesc Asking Conditions:false false
+Score: 7 ** 0, 0, 0, 0, 0, 0, 0, 0 Average Height: 10.857142857142858 NN:NN3Valuesc Asking Conditions:false false
+Score: 7 ** 0, 0, 0, 0, 0, 0, 0, 0 Average Height: 11.57142857142857 NN:NN3Valuesc Asking Conditions:false false
+Score: 7 ** 0, 0, 0, 0, 0, 0, 0, 0 Average Height: 11.285714285714285 NN:NN3Valuesc Asking Conditions:false false
+Score: 6 ** 0, 0, 0, 0, 0, 0, 0, 0 Average Height: 10.5 NN:NN3Valuesc Asking Conditions:false false

@@ -1,0 +1,85 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package bytefigtestering;
+
+import net.percederberg.tetris.Figure;
+import net.percederberg.tetris.Game;
+import tetrispaul2.ByteFig;
+
+/**
+ *
+ * @author Paul
+ */
+public class ByteFigTestering {
+
+    /**
+     * @param args the command line arguments
+     */
+    
+
+    public static void main(String[] args) {
+//        PaulGame[] games100 = new PaulGame[16];
+//        games100[14] = new PaulGame(-5, -24, 22, -37, 41, 16, 7);
+//        games100[10] = new PaulGame(0, -23, 9, -35, 22, 20, 28);//1396
+//        games100[2] = new PaulGame(-20, -23, 35, 37, 31, -6, 16); //421
+//        games100[3] = new PaulGame(-6, -41, 18, -12, 24, 13, 31);//2088
+//        games100[4] = new PaulGame(-3, -44, 51, -19, 24, 0, 7);
+//        games100[5] = new PaulGame(-7, -35, 30, 11, 15, 11, 18);
+//        games100[6] = new PaulGame(2, -40, -13, -36, 44, 11, 9);
+//        games100[7] = new PaulGame(-8, -47, 45, -1, 44, 20, 5);
+//        games100[8] = new PaulGame(-5, -40, -2, -34, 34, 15, 28);
+//        games100[9] = new PaulGame(-42, -28, 23, -37, 23, 5, 23);
+//        games100[1] = new PaulGame(-6, -18, 22, -14, 9, 16, 26);//7797
+//        games100[15]= new PaulGame(-6, -18, 22, 0, 9,16, 26);//the 70thou game with a 0
+//        games100[11] = new PaulGame(-3, -20, 49, -15, 16, 2, 8);  //1468
+//        games100[12] = new PaulGame(-22, -1, 39, -39, 8, 19, 26); //1240
+//        games100[13] = new PaulGame(-8, -38, 45, -42, 34, 11, 25);
+//
+//        games100[0] = new PaulGame(-4, -10, 10, 1, 7, 4, 4);
+//        games100[14] = new PaulGame(-4, -10, 10, 1, 7, 4, 4);
+////        for (int i = 0; i < games100.length; i++) {
+////            games100[i] = returnBestgameof300Rands();
+////            System.out.println("initialPop: " + i + "created.");
+////        }
+////
+//        for (int d = 0; d < 100; d++) {
+//
+//            for (int i = 0; i < games100.length; i++) {
+//                games100[i] = createNextGen(games100[i]);
+//                System.out.println("Next generation of " + i + " created.");
+//            }
+//
+//            System.out.println("NUMBER OF GAMES IMPROVED: " + improvementcounter);
+//            for (int i = 0; i < games100.length; i++) {
+//                System.out.println("Game " + i + ": " + "score: " + games100[i].score + ", " + games100[i].w1 + ", " + games100[i].w2 + ", " + games100[i].w3 + ", " + games100[i].w4 + ", " + games100[i].w5 + ", " + games100[i].w6 + ", " + games100[i].w7);
+//            }
+//
+//        }
+        // TODO code application logic here
+        //-3, -24, 22, -15, 6, 10, 17  32561
+        
+        //int rand1 = (int) (Math.random() * 100 - 50);
+        int[] someweights= {-3, -8, 43, 4, 14, 31, 47, 45};
+        PaulGame game1= new PaulGame(someweights);
+        game1.PlayGame();
+        System.out.println("begin");
+        AIPlayer player=new AIPlayer(1);
+        player.population[0]=game1;
+        player.sout=true;
+       // player.buildRandPop();
+       
+        for (int i = 0; i < 100; i++) {
+            player.createAllNextGen();
+        }
+        
+        
+      //  PaulGame bestgame=player.change1var(game1, 4);
+       // bestgame.soutMe();
+    }
+
+   
+
+    
+}

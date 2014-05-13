@@ -1,0 +1,99 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package bytefigtestering;
+
+
+
+import TetrisHelpful.TetrisWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ *
+ * @author paul.kline
+ */
+public class GameThread implements Runnable {
+
+    private PaulGame mygame=null;
+    private Thread T;
+    private boolean shouldPrintToFile;
+    private String wheretoOutput=null;
+    private AIPlayer myAIPlayer;
+    
+    public GameThread(PaulGame paulgamep){
+        shouldPrintToFile=false;
+        System.out.println(paulgamep.GetStringWeights());
+        mygame=paulgamep;
+        T= new Thread(this, paulgamep.GetStringWeights());
+    }
+    public GameThread(PaulGame paulgamep, String outputfile){
+        shouldPrintToFile=true;
+        wheretoOutput=outputfile;
+        mygame=paulgamep;
+        T= new Thread(this, paulgamep.GetStringWeights());
+        
+    }
+    @Override
+    public void run() {
+        mygame.PlayGame();
+        
+        myAIPlayer.getMybft().NotifyGameCompleted();
+        if (shouldPrintToFile) {
+            TetrisWriter tw = new TetrisWriter();
+            tw.AppendToFile(mygame.soutMe(), wheretoOutput);
+        }else{
+            mygame.soutMe();
+        }
+    }
+    public void PlayMe(){
+        T.start();
+        try {
+            T.join();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(GameThread.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public PaulGame getMygame() {
+        return mygame;
+    }
+
+    public void setMygame(PaulGame mygame) {
+        this.mygame = mygame;
+    }
+
+    public Thread getT() {
+        return T;
+    }
+
+    public void setT(Thread T) {
+        this.T = T;
+    }
+
+    public boolean isShouldPrintToFile() {
+        return shouldPrintToFile;
+    }
+
+    public void setShouldPrintToFile(boolean shouldPrintToFile) {
+        this.shouldPrintToFile = shouldPrintToFile;
+    }
+
+    public String getWheretoOutput() {
+        return wheretoOutput;
+    }
+
+    public void setWheretoOutput(String wheretoOutput) {
+        this.wheretoOutput = wheretoOutput;
+    }
+
+    public AIPlayer getMyAIPlayer() {
+        return myAIPlayer;
+    }
+
+    public void setMyAIPlayer(AIPlayer myAIPlayer) {
+        this.myAIPlayer = myAIPlayer;
+    }
+    
+}

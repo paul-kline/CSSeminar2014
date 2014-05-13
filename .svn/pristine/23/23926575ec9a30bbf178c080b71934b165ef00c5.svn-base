@@ -1,0 +1,58 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package bytefigtestering;
+
+import TetrisFactory.HelpfulStuff.TetrisWriter;
+import java.io.File;
+import net.percederberg.tetris.Figure;
+import net.percederberg.tetris.Game;
+import tetrispaul2.ByteFig;
+
+/**
+ *
+ * @author Paul
+ */
+public class ByteFigTestering {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+
+        int THISMANYGAMES = 100;
+        boolean SHOULDCLONE=true;
+        boolean USETESTWEIGHTS=true;
+        
+        
+        
+        int[] someweights =(USETESTWEIGHTS)? new int[]{0, 0, 0, 0, 0, 0, 0, 0} : new int[]{-3, -8, 43, 4, 14, 31, 47, 45};
+        PaulGame pg = new PaulGame(someweights);
+        TetrisWriter tw = new TetrisWriter();
+        String Writehere = "C:\\Users\\paul.kline\\Desktop\\Old Tetris Results\\";
+        Writehere += (SHOULDCLONE)? "BunchOfOldGames__" : "Experiment\\ExperiemtnalScores";
+        Writehere += tw.GetTimeStamp(true, true, true, true, true, true) + ".txt";
+
+        boolean success= (SHOULDCLONE)? PlayThisGameALotOfTimes(THISMANYGAMES, pg, Writehere): 
+                PlayThisManySlightMutationsToOneGame(THISMANYGAMES, pg, Writehere);
+        
+        //  PlayThisGameALotOfTimes(THISMANY, pg, output);
+
+    }
+
+    public static boolean PlayThisManySlightMutationsToOneGame(int thismany, PaulGame pg, String outputfile) {
+        AIPlayer controller = new AIPlayer(pg, thismany);
+        System.out.println("pg weights are:" + pg.GetStringWeights());
+        controller.createNextGenBasedOn(pg);
+        controller.GivePopulationLife(outputfile);
+        return true;        
+    }
+
+    private static boolean PlayThisGameALotOfTimes(int thismany, PaulGame pg, String outputfile) {
+           AIPlayer controller = new AIPlayer(pg, thismany);
+           controller.createNextGenOfClones(pg);
+           controller.GivePopulationLife(outputfile);
+           return true;
+    }
+}

@@ -1,0 +1,115 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package TemplateMethod;
+
+import tetrispaul4.ControllerObject;
+import net.percederberg.tetris.Game;
+import tetrispaul4.WeightSelector;
+import tetris3.PlacementDecider;
+
+/**
+ *
+ * @author paul.kline
+ */
+public class AbstractGame extends Game implements PlayingInterface {
+
+    public ControllerObject myCO;
+
+    boolean UseNN = false;
+    boolean PauseOnDiff = true;
+    private boolean careIfNNChoiceIsSameAsGChoice = true;
+    private boolean careIfHoleIsMade = true;
+    private boolean useWeights=false;
+
+    public AbstractGame() {
+        super();
+    }
+    public AbstractGame(WeightSelector w, ControllerObject co){
+        this();
+        myCO=co;
+        myWS= w;
+        
+    }
+
+    @Override
+    public void handleFigureStart() {
+        super.handleFigureStart();
+
+        if (!ShouldUseWeights()) {
+            handleMakeDecision();
+            movePiece(placementDecider);
+        }
+    }
+
+    public boolean shouldKeepHistory() {
+        return true;
+    }
+
+    public boolean ShouldUseWeights() {
+        return useWeights;
+    }
+
+
+    private boolean ShouldAskNN() {
+        return UseNN;
+    }
+
+    public boolean ShouldPauseOnDiff() {
+        return PauseOnDiff;
+    }
+
+    @Override
+    public void handleMakeDecision() {
+        placementDecider = null;
+        placementDecider = new PlacementDecider(board, figure, nextFigure, myCO.weights);
+
+        if (ShouldAskNN()) {
+            placementDecider.SetmyCO(myCO);
+            placementDecider.MakeADecisionAndAskNNIfNotSure();
+            if (ShouldPauseOnDiff() && TestPauseConditions()) {
+                    thread.setPaused(true);
+                    handlePause();         
+            }
+        } else {
+            placementDecider.MakeDecision();
+        }
+
+    }
+
+    public boolean TestPauseConditions() {
+        if (getCareIfNNChoiceIsSameAsGChoice() && !placementDecider.GetIsNNChoiceSameAsG_Choice()) {
+            System.out.println("should pause is true");
+            return true;
+        }
+        if (getCareIfHoleIsMade() && placementDecider.HoleIsMade()) {
+            System.out.println("Should pause is true");
+            return true;
+        }
+        System.out.println("should pause is false");
+        return false;
+    }
+
+    public boolean getCareIfNNChoiceIsSameAsGChoice() {
+        return careIfNNChoiceIsSameAsGChoice;
+    }
+
+    public boolean getCareIfHoleIsMade() {
+        return careIfHoleIsMade;
+    }
+
+    public void SetUseNN(Boolean UseNN) {
+        this.UseNN=UseNN;
+    }
+
+    public void SetPauseOnDiff(boolean PauseOnDif) {
+        PauseOnDiff=PauseOnDif;
+        
+        
+    }
+
+    public void setUseWeights(boolean UseWeights) {
+        this.useWeights=UseWeights;
+    }
+}

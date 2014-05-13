@@ -1,0 +1,192 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package TetrisFactory.HelpfulStuff;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+
+/**
+ *
+ * @author paul.kline
+ */
+@Embeddable
+public class TetrisscoresPK implements Serializable {
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Basic(optional = false)
+    @Column(nullable = false, precision = 9, scale = 2)
+    private BigDecimal score;
+    @Basic(optional = false)
+    @Column(nullable = false, precision = 9, scale = 2)
+    private BigDecimal w1;
+    @Basic(optional = false)
+    @Column(nullable = false, precision = 9, scale = 2)
+    private BigDecimal w2;
+    @Basic(optional = false)
+    @Column(nullable = false, precision = 9, scale = 2)
+    private BigDecimal w3;
+    @Basic(optional = false)
+    @Column(nullable = false, precision = 9, scale = 2)
+    private BigDecimal w4;
+    @Basic(optional = false)
+    @Column(nullable = false, precision = 9, scale = 2)
+    private BigDecimal w5;
+    @Basic(optional = false)
+    @Column(nullable = false, precision = 9, scale = 2)
+    private BigDecimal w6;
+    @Basic(optional = false)
+    @Column(nullable = false, precision = 9, scale = 2)
+    private BigDecimal w7;
+    @Basic(optional = false)
+    @Column(nullable = false, precision = 9, scale = 2)
+    private BigDecimal w8;
+
+    public TetrisscoresPK() {
+    }
+
+    public TetrisscoresPK(BigDecimal score, BigDecimal w1, BigDecimal w2, BigDecimal w3, BigDecimal w4, BigDecimal w5, BigDecimal w6, BigDecimal w7, BigDecimal w8) {
+        this.score = score;
+        this.w1 = w1;
+        this.w2 = w2;
+        this.w3 = w3;
+        this.w4 = w4;
+        this.w5 = w5;
+        this.w6 = w6;
+        this.w7 = w7;
+        this.w8 = w8;
+    }
+
+    public BigDecimal getScore() {
+        return score;
+    }
+
+    public void setScore(BigDecimal score) {
+        this.score = score;
+    }
+
+    public BigDecimal getW1() {
+        return w1;
+    }
+
+    public void setW1(BigDecimal w1) {
+        this.w1 = w1;
+    }
+
+    public BigDecimal getW2() {
+        return w2;
+    }
+
+    public void setW2(BigDecimal w2) {
+        this.w2 = w2;
+    }
+
+    public BigDecimal getW3() {
+        return w3;
+    }
+
+    public void setW3(BigDecimal w3) {
+        this.w3 = w3;
+    }
+
+    public BigDecimal getW4() {
+        return w4;
+    }
+
+    public void setW4(BigDecimal w4) {
+        this.w4 = w4;
+    }
+
+    public BigDecimal getW5() {
+        return w5;
+    }
+
+    public void setW5(BigDecimal w5) {
+        this.w5 = w5;
+    }
+
+    public BigDecimal getW6() {
+        return w6;
+    }
+
+    public void setW6(BigDecimal w6) {
+        this.w6 = w6;
+    }
+
+    public BigDecimal getW7() {
+        return w7;
+    }
+
+    public void setW7(BigDecimal w7) {
+        this.w7 = w7;
+    }
+
+    public BigDecimal getW8() {
+        return w8;
+    }
+
+    public void setW8(BigDecimal w8) {
+        this.w8 = w8;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (score != null ? score.hashCode() : 0);
+        hash += (w1 != null ? w1.hashCode() : 0);
+        hash += (w2 != null ? w2.hashCode() : 0);
+        hash += (w3 != null ? w3.hashCode() : 0);
+        hash += (w4 != null ? w4.hashCode() : 0);
+        hash += (w5 != null ? w5.hashCode() : 0);
+        hash += (w6 != null ? w6.hashCode() : 0);
+        hash += (w7 != null ? w7.hashCode() : 0);
+        hash += (w8 != null ? w8.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof TetrisscoresPK)) {
+            return false;
+        }
+        TetrisscoresPK other = (TetrisscoresPK) object;
+        if ((this.score == null && other.score != null) || (this.score != null && !this.score.equals(other.score))) {
+            return false;
+        }
+        if ((this.w1 == null && other.w1 != null) || (this.w1 != null && !this.w1.equals(other.w1))) {
+            return false;
+        }
+        if ((this.w2 == null && other.w2 != null) || (this.w2 != null && !this.w2.equals(other.w2))) {
+            return false;
+        }
+        if ((this.w3 == null && other.w3 != null) || (this.w3 != null && !this.w3.equals(other.w3))) {
+            return false;
+        }
+        if ((this.w4 == null && other.w4 != null) || (this.w4 != null && !this.w4.equals(other.w4))) {
+            return false;
+        }
+        if ((this.w5 == null && other.w5 != null) || (this.w5 != null && !this.w5.equals(other.w5))) {
+            return false;
+        }
+        if ((this.w6 == null && other.w6 != null) || (this.w6 != null && !this.w6.equals(other.w6))) {
+            return false;
+        }
+        if ((this.w7 == null && other.w7 != null) || (this.w7 != null && !this.w7.equals(other.w7))) {
+            return false;
+        }
+        if ((this.w8 == null && other.w8 != null) || (this.w8 != null && !this.w8.equals(other.w8))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "TetrisFactory.HelpfulStuff.TetrisscoresPK[ score=" + score + ", w1=" + w1 + ", w2=" + w2 + ", w3=" + w3 + ", w4=" + w4 + ", w5=" + w5 + ", w6=" + w6 + ", w7=" + w7 + ", w8=" + w8 + " ]";
+    }
+    
+}

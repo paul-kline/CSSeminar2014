@@ -1,0 +1,26 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package tetrispaul4;
+
+import TemplateMethod.AbstractGame;
+import net.percederberg.tetris.ControllerObject;
+import net.percederberg.tetris.WeightSelector;
+
+/**
+ *
+ * @author paul.kline
+ */
+public class TetrisPaul4 {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        ControllerObject CO = new ControllerObject();
+        CO.setMyGame(new AbstractGame());
+        WeightSelector ws = new WeightSelector(CO);
+        ws.setVisible(true);
+    }
+}

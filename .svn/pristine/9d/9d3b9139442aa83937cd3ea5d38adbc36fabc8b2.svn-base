@@ -1,0 +1,57 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package bytefigtestering;
+
+
+
+import TetrisHelpful.TetrisWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ *
+ * @author paul.kline
+ */
+public class GameThread implements Runnable {
+
+    PaulGame mygame=null;
+    Thread T;
+    boolean shouldPrintToFile;
+    String wheretoOutput=null;
+    
+    public GameThread(PaulGame paulgamep){
+        shouldPrintToFile=false;
+        System.out.println(paulgamep.GetStringWeights());
+        mygame=paulgamep;
+        T= new Thread(this, paulgamep.GetStringWeights());
+    }
+    public GameThread(PaulGame paulgamep, String outputfile){
+        shouldPrintToFile=true;
+        wheretoOutput=outputfile;
+        mygame=paulgamep;
+        T= new Thread(this, paulgamep.GetStringWeights());
+        
+    }
+    @Override
+    public void run() {
+        mygame.PlayGame();
+        
+        if (shouldPrintToFile) {
+            TetrisWriter tw = new TetrisWriter();
+            tw.AppendToFile(mygame.soutMe(), wheretoOutput);
+        }else{
+            mygame.soutMe();
+        }
+    }
+    public void PlayMe(){
+        T.start();
+        try {
+            T.join();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(GameThread.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+}

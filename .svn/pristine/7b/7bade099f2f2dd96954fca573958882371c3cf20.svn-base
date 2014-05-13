@@ -1,0 +1,271 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ *//*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package bytefigtestering;
+
+import GUIs.Progress;
+import tetris3.PlacementDecider;
+
+/**
+ *
+ * @author Paul
+ */
+public class AIPlayer {
+
+    private int improvementcounter = 0;
+    private PaulGame[] population = null;
+    private PaulGame seedGame = null;
+    private boolean sout = false;
+    private Progress progressGUI;
+    private ByteFigTestering mybft;
+    private GAControllerObject myGACO;
+    
+    public AIPlayer(PaulGame gamep, int popsize) {
+        population = new PaulGame[popsize];
+       // InitializePopulationToNulls();
+        seedGame = gamep;
+    }
+
+    public AIPlayer(int popsize) {
+        population = new PaulGame[popsize];
+    //    InitializePopulationToNulls();
+    }
+
+    public AIPlayer(GAControllerObject gaco) {
+        myGACO=gaco;
+        
+    }
+    public void PlayGameUsingGaco(){
+        PaulGame[] initialPopulation = CreatePopulationFromSeeds();
+        PlayPopulation(initialPopulation);
+        for (int i = 1; i < myGACO.getGenerations(); i++) {
+            
+            
+        }
+    }
+
+    private PaulGame1 returnBestgameof300Rands() {
+        int best = 0;
+        PaulGame1[] games = new PaulGame1[300];
+        PaulGame1 bestgame = null;
+        for (int i = 0; i < 300; i++) {
+            int numberOfWeights = 8;
+            int[] randWeights = new int[numberOfWeights];
+            for (int j = 0; j < randWeights.length; j++) {
+                randWeights[j] = (int) (Math.random() * 100 - 50);
+
+            }
+
+            PaulGame1 agame = new PaulGame1(randWeights);
+            agame.PlayGame();
+            games[i] = agame;
+
+            agame = null;
+            if (games[i].score > best) {
+                best = games[i].score;
+                bestgame = games[i];
+            }
+        }
+        //      System.out.print("Best score of 300: " + best);
+        //      System.out.print(" " + bestgame.w1 + " " + bestgame.w2 + " " + bestgame.w3 + " " + bestgame.w4 + " " + bestgame.w5 + " " + bestgame.w6 + " " + bestgame.w7 + " " + bestgame.w8 + '\n');
+        return bestgame;
+    }
+
+    public PaulGame change1var(PaulGame game, int which) {
+        int rand = 0;
+        int best = 0;
+        PaulGame[] games = new PaulGame[300];
+        PaulGame bestgame = null;
+
+        
+
+        for (int i = 0; i < 300; i++) {
+            rand = (int) (Math.random() * 100 - 50);
+
+            switch (which) {
+                case 1:
+                    game.myWeights[0] = rand;
+
+                    break;
+                case 2:
+                    game.myWeights[1] = rand;
+
+                    break;
+                case 3:
+                    game.myWeights[2] = rand;
+
+                    break;
+                case 4:
+                    game.myWeights[3] = rand;
+
+                    break;
+                case 5:
+                    game.myWeights[4] = rand;
+
+                    break;
+                case 6:
+                    game.myWeights[5] = rand;
+
+                    break;
+                case 7:
+                    game.myWeights[6] = rand;
+
+                    break;
+                case 8:
+                    game.myWeights[7] = rand;
+
+                    break;
+
+                default:
+                    throw new AssertionError();
+            }
+
+
+
+
+            PaulGame1 agame = new PaulGame1(game.myWeights);//game.w1, game.w2, game.w3, game.w4, game.w5, game.w6, game.w7, game.w8);
+            agame.PlayGame();
+            games[i] = agame;
+            agame = null;
+            System.out.println("Game: " + i);
+            // games[i].soutMe();
+            if (games[i].score > best) {
+                best = games[i].score;
+                bestgame = games[i];
+            }
+        }
+        System.out.print("Best score of 300: " + best);
+        System.out.print(" " + bestgame.myWeights[0] + " " + bestgame.myWeights[1] + " " + bestgame.myWeights[2] + " " + bestgame.myWeights[3] + " "
+                + bestgame.myWeights[4] + " " + bestgame.myWeights[5] + " " + bestgame.myWeights[6] + " " + bestgame.myWeights[7] + '\n');
+        return bestgame;
+    }
+
+    public void createNextGenOfClones(PaulGame paulGame) {
+        PaulGame localBaseGame = null;
+        if (null == paulGame) {
+            localBaseGame = seedGame;
+        } else {
+            localBaseGame = paulGame;
+        }
+        
+        for (int i = 0; i < population.length; i++) {            
+            population[i]= new PaulGame1(paulGame.myWeights);
+        }
+
+    }
+    public PaulGame createEachChildNextGenBasedOn(PaulGame paulGame) {
+        PaulGame localBaseGame = null;
+        if (null == paulGame) {
+            localBaseGame = seedGame;
+        } else {
+            localBaseGame = paulGame;
+        }
+        int best = 0;
+        int oldbest = localBaseGame.score;
+
+        //PaulGame[] games = new PaulGame[300];
+        PaulGame bestgame = null;
+
+        //make new myWeights for everyone!
+        for (int i = 0; i < population.length; i++) {
+            int[] WieghtswithSlightRandomChange = new int[localBaseGame.myWeights.length];
+            for (int j = 0; j < localBaseGame.myWeights.length; j++) {
+                WieghtswithSlightRandomChange[j] = localBaseGame.myWeights[j] + (int) (Math.random() * 11 - 5);
+            }
+            population[i]= new PaulGame1(WieghtswithSlightRandomChange);
+        }
+        return paulGame;
+    }
+
+    //play all the games, but save the output of each game to this file.
+    //hope it works with threads!!!
+    public void GivePopulationLife(String recordOutcomesHere){
+        for (PaulGame paulGame : population) {
+            GameThread gt= new GameThread(paulGame, recordOutcomesHere);
+            gt.PlayMe();
+        }
+    }
+    //play all the games!
+    public void GivePopulationLife(){
+        for (PaulGame paulGame : population) {
+            GameThread gt= new GameThread(paulGame);
+            gt.PlayMe();
+        }
+    }
+    public void createAllNextGen() {
+        for (int i = 0; i < population.length; i++) {
+            population[i] = createEachChildNextGenBasedOn(population[i]);
+            if (sout) {
+                System.out.print(i + " ");
+                population[i].soutMe();
+            }
+        }
+    }
+
+    public void buildRandPop() {
+        for (int i = 0; i < population.length; i++) {
+            population[i] = returnBestgameof300Rands();
+            if (sout) {
+                population[i].soutMe();
+            }
+        }
+    }
+
+    public int getImprovementcounter() {
+        return improvementcounter;
+    }
+
+    public void setImprovementcounter(int improvementcounter) {
+        this.improvementcounter = improvementcounter;
+    }
+
+    public PaulGame[] getPopulation() {
+        return population;
+    }
+
+    public void setPopulation(PaulGame[] population) {
+        this.population = population;
+    }
+
+    public PaulGame getSeedGame() {
+        return seedGame;
+    }
+
+
+
+    public Progress getProgressGUI() {
+        return progressGUI;
+    }
+
+    public void setProgressGUI(Progress progressGUI) {
+        this.progressGUI = progressGUI;
+    }
+
+    private PaulGame[] CreatePopulationFromSeeds() {
+        PaulGame[] pgs= new PaulGame[myGACO.getSeeds().size()];
+        for (int i = 0; i < pgs.length; i++) {
+             pgs[i]= new PaulGame1(myGACO.getSeeds().get(i),this);
+            
+        }
+        return pgs;
+    }
+
+    public GAControllerObject getMyGACO() {
+        return myGACO;
+    }
+
+    public void setMyGACO(GAControllerObject myGACO) {
+        this.myGACO = myGACO;
+    }
+
+    private void PlayPopulation(PaulGame[] initialPopulation) {
+        for (int i = 0; i < initialPopulation.length; i++) {
+            initialPopulation[i].setPlacementDecider(new PlacementDecider(myGACO));
+            
+        }
+    }
+}

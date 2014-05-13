@@ -1,0 +1,9 @@
+compile.on.save=true
+do.depend=false
+do.jar=true
+file.reference.commons-math3-3.0.jar=\\\\roonwit\\homes\\students\\paul.kline\\SVN TETRIS 2\\TheTetris\\EncogStuff\\Encog Libs\\commons-math3-3.0.jar
+file.reference.DataStruct.jar=\\\\roonwit\\homes\\students\\paul.kline\\CS212_projects Paul Kline
+file.reference.encog-core-3.2.0.jar=\\\\roonwit\\homes\\students\\paul.kline\\SVN TETRIS 2\\TheTetris\\EncogStuff\\Encog Libs\\encog-core-3.2.0.jar
+javac.debug=true
+javadoc.preview=true
+user.properties.file=C:\\Users\\paul.kline\\AppData\\Roaming\\NetBeans\\7.3.1\\build.properties

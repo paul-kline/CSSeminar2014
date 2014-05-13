@@ -1,0 +1,83 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package TetrisFactory.HelpfulStuff;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlRootElement;
+
+/**
+ *
+ * @author paul.kline
+ */
+@Entity
+@Table(catalog = "Tetris", schema = "")
+@XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = "Tetrisscores.findAll", query = "SELECT t FROM Tetrisscores t"),
+    @NamedQuery(name = "Tetrisscores.findByScore", query = "SELECT t FROM Tetrisscores t WHERE t.tetrisscoresPK.score = :score"),
+    @NamedQuery(name = "Tetrisscores.findByW1", query = "SELECT t FROM Tetrisscores t WHERE t.tetrisscoresPK.w1 = :w1"),
+    @NamedQuery(name = "Tetrisscores.findByW2", query = "SELECT t FROM Tetrisscores t WHERE t.tetrisscoresPK.w2 = :w2"),
+    @NamedQuery(name = "Tetrisscores.findByW3", query = "SELECT t FROM Tetrisscores t WHERE t.tetrisscoresPK.w3 = :w3"),
+    @NamedQuery(name = "Tetrisscores.findByW4", query = "SELECT t FROM Tetrisscores t WHERE t.tetrisscoresPK.w4 = :w4"),
+    @NamedQuery(name = "Tetrisscores.findByW5", query = "SELECT t FROM Tetrisscores t WHERE t.tetrisscoresPK.w5 = :w5"),
+    @NamedQuery(name = "Tetrisscores.findByW6", query = "SELECT t FROM Tetrisscores t WHERE t.tetrisscoresPK.w6 = :w6"),
+    @NamedQuery(name = "Tetrisscores.findByW7", query = "SELECT t FROM Tetrisscores t WHERE t.tetrisscoresPK.w7 = :w7"),
+    @NamedQuery(name = "Tetrisscores.findByW8", query = "SELECT t FROM Tetrisscores t WHERE t.tetrisscoresPK.w8 = :w8")})
+public class Tetrisscores implements Serializable {
+    private static final long serialVersionUID = 1L;
+    @EmbeddedId
+    protected TetrisscoresPK tetrisscoresPK;
+
+    public Tetrisscores() {
+    }
+
+    public Tetrisscores(TetrisscoresPK tetrisscoresPK) {
+        this.tetrisscoresPK = tetrisscoresPK;
+    }
+
+    public Tetrisscores(BigDecimal score, BigDecimal w1, BigDecimal w2, BigDecimal w3, BigDecimal w4, BigDecimal w5, BigDecimal w6, BigDecimal w7, BigDecimal w8) {
+        this.tetrisscoresPK = new TetrisscoresPK(score, w1, w2, w3, w4, w5, w6, w7, w8);
+    }
+
+    public TetrisscoresPK getTetrisscoresPK() {
+        return tetrisscoresPK;
+    }
+
+    public void setTetrisscoresPK(TetrisscoresPK tetrisscoresPK) {
+        this.tetrisscoresPK = tetrisscoresPK;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (tetrisscoresPK != null ? tetrisscoresPK.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Tetrisscores)) {
+            return false;
+        }
+        Tetrisscores other = (Tetrisscores) object;
+        if ((this.tetrisscoresPK == null && other.tetrisscoresPK != null) || (this.tetrisscoresPK != null && !this.tetrisscoresPK.equals(other.tetrisscoresPK))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "TetrisFactory.HelpfulStuff.Tetrisscores[ tetrisscoresPK=" + tetrisscoresPK + " ]";
+    }
+    
+}

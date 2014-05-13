@@ -1,0 +1,82 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package bytefigtestering;
+
+import NeuralThings.PaulNetworkFactory;
+import NeuralThings.PaulNetworkFactory.NNCodes;
+import TetrisHelpful.TetrisReader;
+import TetrisHelpful.TetrisWriter;
+
+/**
+ *
+ * @author paul.kline
+ */
+public class Seed {
+
+    private NNCodes nncode;
+    private String WeightString;
+    private int[] weights;
+    boolean UseWeights;
+    boolean UseNN;
+    private boolean useRandomweights = false;
+
+    public Seed(NNCodes nncodep, String strW) {
+        UseNN = !(nncodep == PaulNetworkFactory.NNCodes.NONE);
+        UseWeights = !"NONE".equals(strW);
+        useRandomweights = "RANDOM".equals(strW);
+        System.out.println("should I use weights:" + UseWeights);
+        nncode = nncodep;
+        WeightString = strW;
+        setWeights(strW);
+
+    }
+
+    private void setWeights(String str) {
+
+        if (!UseWeights) {
+//            for (int i = 0; i < weights.length; i++) {
+//                weights[i]=0;                
+//            }
+            weights = null;
+            return;
+        }
+
+        TetrisReader tr = new TetrisReader();
+        int[] ScoreAndweights = tr.SplitScoreStringToIntArray(str, ",");
+
+        weights = new int[ScoreAndweights.length - 1];
+
+        if (useRandomweights) {
+            for (int i = 0; i < weights.length; i++) {
+                weights[i] = (int) (Math.random() * 100 - 50);
+
+            }
+            return;
+        }
+
+
+
+        for (int i = 1; i < ScoreAndweights.length; i++) {
+            weights[i - 1] = ScoreAndweights[i];
+        }
+    }
+
+    @Override
+    public String toString() {
+        return nncode.toString() + "~~" + WeightString;
+    }
+
+    public boolean isUseRandomweights() {
+        return useRandomweights;
+    }
+
+    public void setUseRandomweights(boolean useRandomweights) {
+        this.useRandomweights = useRandomweights;
+    }
+
+    int[] getWeights() {
+        return weights;
+    }
+}

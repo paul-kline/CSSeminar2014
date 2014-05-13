@@ -1,0 +1,4 @@
+compile.on.save=true
+file.reference.commons-math3-3.0.jar=C:\\Users\\Paul\\Documents\\SVN TETRIS 2\\TheTetris\\EncogStuff\\Encog Libs\\commons-math3-3.0.jar
+file.reference.encog-core-3.2.0.jar=C:\\Users\\Paul\\Documents\\SVN TETRIS 2\\TheTetris\\EncogStuff\\Encog Libs\\encog-core-3.2.0.jar
+user.properties.file=C:\\Users\\Paul\\AppData\\Roaming\\NetBeans\\8.0beta\\build.properties

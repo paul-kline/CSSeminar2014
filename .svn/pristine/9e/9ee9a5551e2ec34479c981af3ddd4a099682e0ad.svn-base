@@ -1,0 +1,267 @@
+/*
+ * @(#)Main.java
+ *
+ * This work is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * This work is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * Copyright (c) 2003 Per Cederberg. All rights reserved.
+ */
+package net.percederberg.tetris;
+
+import TetrisFactory.RegularTetris;
+import TetrisFactory.TetrisFactory;
+import TetrisFactory.TrainFromFailSequenceTetris;
+import java.applet.Applet;
+import java.awt.BorderLayout;
+import java.awt.Button;
+import java.awt.Container;
+import java.awt.Frame;
+import java.awt.GridLayout;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.AbstractButton;
+import javax.swing.ButtonGroup;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JRadioButton;
+
+/**
+ * The main class of the Tetris game. This class contains the necessary methods
+ * to run the game either as a stand-alone application or as an applet inside a
+ * web page.
+ *
+ * @version 1.2
+ * @author Per Cederberg, per@percederberg.net
+ */
+public class Main extends Applet {
+
+    /**
+     * The applet parameter information structure.
+     */
+    private static final String PARAMETER[][] = {
+        {"tetris.color.background", "color",
+            "The overall background color."},
+        {"tetris.color.label", "color",
+            "The text color of the labels."},
+        {"tetris.color.button", "color",
+            "The start and pause button bolor."},
+        {"tetris.color.board.background", "color",
+            "The background game board color."},
+        {"tetris.color.board.message", "color",
+            "The game board message color."},
+        {"tetris.color.figure.square", "color",
+            "The color of the square figure."},
+        {"tetris.color.figure.line", "color",
+            "The color of the line figure."},
+        {"tetris.color.figure.s", "color",
+            "The color of the 's' curved figure."},
+        {"tetris.color.figure.z", "color",
+            "The color of the 'z' curved figure."},
+        {"tetris.color.figure.right", "color",
+            "The color of the right angle figure."},
+        {"tetris.color.figure.left", "color",
+            "The color of the left angle figure."},
+        {"tetris.color.figure.triangle", "color",
+            "The color of the triangle figure."}
+    };
+
+    private static int GetWhichGame() {
+        final JFrame frame = new JFrame("Let us begin");
+
+        // implement ItemListener interface
+        class MyItemListener implements ItemListener {
+
+            String command;
+
+            public String getCommand() {
+                return command;
+            }
+            public void KillMyself(){
+                frame.setVisible(false);               
+            }
+
+            public void itemStateChanged(ItemEvent ev) {
+                boolean selected = (ev.getStateChange() == ItemEvent.SELECTED);
+                AbstractButton button = (AbstractButton) ev.getItemSelectable();
+                command = button.getActionCommand();
+
+                //      JOptionPane.showMessageDialog(frame,"command set?");
+            }
+        }
+
+        // creates radio button and set corresponding action
+        // commands
+        JRadioButton rb1 = new JRadioButton("1. Old Weight Method Player");
+        rb1.setActionCommand(""+TetrisFactory.OLDWEIGHTMETHOD);
+
+        JRadioButton rb2 = new JRadioButton("2. Good Ole Tetris!");
+        rb2.setActionCommand(""+TetrisFactory.REGULAR);
+
+        JRadioButton rb3 = new JRadioButton("3. Side by side comparison (unimplemented)");
+        rb3.setActionCommand(""+TetrisFactory.SIDEBYSIDECOMPAREOFSAMEGAME);
+        JRadioButton rb4 = new JRadioButton("4. Train playing fail sequences");
+        rb4.setActionCommand(""+TetrisFactory.TRAINFROMFAILSEQUENCE);
+        JRadioButton rb5 = new JRadioButton("5. Train from playing a regular game of Tetris");
+        rb5.setActionCommand(""+TetrisFactory.TRAINFROMREGULARRUNNING);
+        JRadioButton rb6 = new JRadioButton("6. Weights with NN Tetris (unimplemented)");
+        rb6.setActionCommand(""+TetrisFactory.WEIGHTSWITHNNTETRIS);
+        JRadioButton rb7 = new JRadioButton("7. View top choices");
+        rb7.setActionCommand(""+TetrisFactory.VIEWTOPCHOICES);
+
+
+        // add event handler
+        MyItemListener myItemListener = new MyItemListener();
+        rb1.addItemListener(myItemListener);
+        rb2.addItemListener(myItemListener);
+        rb3.addItemListener(myItemListener);
+        rb4.addItemListener(myItemListener);
+        rb5.addItemListener(myItemListener);
+        rb6.addItemListener(myItemListener);
+        rb7.addItemListener(myItemListener);
+
+        // add radio buttons to a ButtonGroup
+        final ButtonGroup group = new ButtonGroup();
+        group.add(rb1);
+        group.add(rb2);
+        group.add(rb3);
+        group.add(rb4);
+        group.add(rb5);
+        group.add(rb6);
+        group.add(rb7);
+
+        // Frame setting
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(300, 200);
+        Container cont = frame.getContentPane();
+
+        cont.setLayout(new GridLayout(0, 1));
+        cont.add(new JLabel("Please choose what you want to do:"));
+        cont.add(rb1);
+        cont.add(rb2);
+        cont.add(rb3);
+        cont.add(rb4);
+        cont.add(rb5);
+        cont.add(rb6);
+        cont.add(rb7);
+
+        frame.setVisible(true);
+        try {
+            while (myItemListener.getCommand() == null) {
+                Thread.sleep(3);
+            }
+
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        String returnvalue = myItemListener.getCommand();
+        myItemListener.KillMyself();
+        myItemListener = null;
+        return Integer.parseInt(returnvalue);
+    }
+    /**
+     * The Tetris game being played (in applet mode).
+     */
+    private Game game = null;
+
+    /**
+     * The stand-alone main routine.
+     *
+     * @param args the command-line arguments
+     */
+    public static void main(String[] args) {
+        Frame frame = new Frame("Tetris");
+        TetrisFactory tetrisFactory = new TetrisFactory();
+        Game game = tetrisFactory.createGame(GetWhichGame());
+        
+     
+        //       Game game= tetrisFactory.createGame(TetrisFactory.REGULAR);
+//        
+        //       Game game= tetrisFactory.createGame(TetrisFactory.WEIGHTSWITHNNTETRIS);
+
+//
+//        ((TrainFromFailSequenceTetris)game).LoadInEntireFailSequence();
+//        ((TrainFromFailSequenceTetris)game).testSettingTheBoard();
+
+        // Set up frame
+        frame.add(game.getComponent());
+        frame.pack();
+
+        // Add frame window listener
+        frame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                System.exit(0);
+            }
+        });
+
+        // Show frame (and start game)
+        if (game.getClass() == TrainFromFailSequenceTetris.class) {
+            System.out.println("HI!");
+//            Button button = new Button("Hello!");
+//            frame.add(button, 1);
+
+        }
+        frame.show();
+    }
+
+    /**
+     * Returns information about the parameters that are understood by this
+     * applet.
+     *
+     * @return an array describing the parameters to this applet
+     */
+    public String[][] getParameterInfo() {
+        return PARAMETER;
+    }
+
+    /**
+     * Initializes the game in applet mode.
+     */
+    public void init() {
+        String value;
+
+        // Set all configuration parameters
+        for (int i = 0; i < PARAMETER.length; i++) {
+            value = getParameter(PARAMETER[i][0]);
+            if (value != null) {
+                Configuration.setValue(PARAMETER[i][0], value);
+            }
+        }
+
+        // Create game object
+        game = new Game();
+
+        // Initialize applet component
+        setLayout(new BorderLayout());
+        add(game.getComponent(), "Center");
+    }
+
+    /**
+     * Stops the game in applet mode.
+     */
+    public void stop() {
+        game.quit();
+    }
+
+    /**
+     * A dummy COM object wrapper. This class has been created only to avoid the
+     * erroneous HTTP lookup for it when the Tetris game is run as an applet in
+     * some browsers.
+     *
+     * @version 1.0
+     * @author Per Cederberg, per@percederberg.net
+     */
+    public static class COMClassObject extends Object {
+    }
+}

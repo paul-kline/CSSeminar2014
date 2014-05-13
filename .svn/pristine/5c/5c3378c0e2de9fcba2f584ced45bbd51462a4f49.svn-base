@@ -1,0 +1,8 @@
+compile.on.save=true
+do.depend=false
+do.jar=true
+javac.debug=true
+javadoc.preview=true
+project.TetrisPaul2=C:\\Users\\Paul\\Documents\\SVN TETRIS\\TheTetris\\Tetris_play_with_forSeminar\\TetrisPaul2
+user.properties.file=C:\\Users\\Paul\\AppData\\Roaming\\NetBeans\\7.4beta\\build.properties
+work.dir=.
